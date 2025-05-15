@@ -3,6 +3,9 @@ import './index.css';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TramitesGrid from './components/TramitesGrid';
+import AboutUs from './components/AboutUs';
+import PricingSection from './components/PricingSection';
+import Footer from './components/Footer';
 
 function App() {
 
@@ -12,6 +15,9 @@ function App() {
       <div className="pt-20">
         <Hero />
         <TramitesGrid />
+        <AboutUs />
+        <PricingSection />
+        <Footer />
       </div>
     </>
   )
