@@ -1,4 +1,5 @@
-import './App.css'
+import { useLocation } from 'react-router-dom';
+import './App.css';
 import './index.css';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -8,11 +9,13 @@ import PricingSection from './components/PricingSection';
 import Footer from './components/Footer';
 
 function App() {
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
 
   return (
     <>
-      <Navbar />
-      <div className="pt-20">
+      {isLanding && <Navbar />}
+      <div className={isLanding ? 'pt-20' : ''}>
         <Hero />
         <TramitesGrid />
         <AboutUs />
@@ -20,7 +23,7 @@ function App() {
         <Footer />
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
