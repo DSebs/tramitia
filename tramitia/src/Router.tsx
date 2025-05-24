@@ -3,6 +3,7 @@ import App from './App';
 import Login from './components/Login';
 import Register from './components/Register';
 import LibretaMilitar from './pages/LibretaMilitar';
+import RUNT from './pages/RUNT';
 
 // Componente simple para pruebas
 
@@ -16,6 +17,7 @@ const Router = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/tramites/libreta-militar" element={<LibretaMilitar />} />
+        <Route path="/tramites/runt" element={<RUNT />} />
       </Routes>
     </BrowserRouter>
   );

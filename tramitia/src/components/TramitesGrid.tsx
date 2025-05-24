@@ -22,6 +22,8 @@ const TramitesGrid = () => {
   const handleTramiteClick = (tramiteTitle: string) => {
     if (tramiteTitle === 'Libreta Militar') {
       navigate('/tramites/libreta-militar');
+    } else if (tramiteTitle === 'RUNT') {
+      navigate('/tramites/runt');
     } else {
       console.log(`Ir a sección de ${tramiteTitle}`);
     }

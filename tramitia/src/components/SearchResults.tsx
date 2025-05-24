@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import libretaMilitarImg from '../assets/imgTramites/Libreta Militar.jpg';
 import pasaporteImg from '../assets/imgTramites/Pasaporte.jpeg';
 import licenciaImg from '../assets/imgTramites/Licencia.jpg';
+import runtImg from '../assets/imgTramites/Renta.jpeg';
 
 interface SearchResult {
   title: string;
@@ -26,6 +27,12 @@ const SearchResults = ({ query, onSelect, isVisible }: SearchResultsProps) => {
       description: 'Documento de identificación militar obligatorio para ciudadanos colombianos',
       image: libretaMilitarImg,
       route: '/tramites/libreta-militar'
+    },
+    {
+      title: 'RUNT',
+      description: 'Registro Único Nacional de Tránsito para conductores y vehículos',
+      image: runtImg,
+      route: '/tramites/runt'
     },
     {
       title: 'Pasaporte',
