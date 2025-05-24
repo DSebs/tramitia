@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import avionLogo from '../assets/branding/avionLogo.png';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
 
   // Navegar a la página principal y luego hacer scroll a la sección
   const scrollToSection = (sectionId: string) => {
@@ -42,30 +44,54 @@ const Navbar = () => {
         />
       </div>
       <ul className="hidden md:flex gap-10 font-poppins text-lg text-[#2C3E50]">
-        <li>
-          <span
-            onClick={() => scrollToSection('servicio')}
-            className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
-          >
-            Servicio
-          </span>
-        </li>
-        <li>
-          <span
-            onClick={() => scrollToSection('nosotros')}
-            className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
-          >
-            Nosotros
-          </span>
-        </li>
-        <li>
-          <span
-            onClick={() => scrollToSection('consultados')}
-            className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
-          >
-            Consultados
-          </span>
-        </li>
+      {isLanding ? (
+  <>
+    <li>
+      <span
+        onClick={() => scrollToSection('servicio')}
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
+      >
+        Servicio
+      </span>
+    </li>
+    <li>
+      <span
+        onClick={() => scrollToSection('nosotros')}
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
+      >
+        Nosotros
+      </span>
+    </li>
+    <li>
+      <span
+        onClick={() => scrollToSection('consultados')}
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
+      >
+        Consultados
+      </span>
+    </li>
+  </>
+) : (
+  <>
+    <li>
+      <Link
+        to="/"
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+      >
+        Inicio
+      </Link>
+    </li>
+    <li>
+      <Link
+        to="/historial"
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+      >
+        Historial
+      </Link>
+    </li>
+  </>
+)}
+
       </ul>
       {/* Botón "Acceder" usando Link para SPA */}
       <Link
@@ -99,40 +125,65 @@ const Navbar = () => {
       {/* Menú desplegable en móvil */}
       {menuOpen && (
         <ul className="absolute top-full left-0 w-full bg-[#F5F5F5] shadow-md flex flex-col items-center gap-4 py-4 md:hidden font-poppins text-lg text-[#2C3E50] animate-fade-in z-50">
-          <li>
-            <span
-              onClick={() => {
-                scrollToSection('servicio');
-                setMenuOpen(false);
-              }}
-              className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
-            >
-              Servicio
-            </span>
-          </li>
-          <li>
-            <span
-              onClick={() => {
-                scrollToSection('nosotros');
-                setMenuOpen(false);
-              }}
-              className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
-            >
-              Nosotros
-            </span>
-          </li>
-          <li>
-            <span
-              onClick={() => {
-                scrollToSection('consultados');
-                setMenuOpen(false);
-              }}
-              className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
-            >
-              Consultados
-            </span>
-          </li>
-        </ul>
+        {isLanding ? (
+          <>
+            <li>
+              <span
+                onClick={() => {
+                  scrollToSection('servicio');
+                  setMenuOpen(false);
+                }}
+                className="hover:text-[#32A5DD] transition-colors cursor-pointer"
+              >
+                Servicio
+              </span>
+            </li>
+            <li>
+              <span
+                onClick={() => {
+                  scrollToSection('nosotros');
+                  setMenuOpen(false);
+                }}
+                className="hover:text-[#32A5DD] transition-colors cursor-pointer"
+              >
+                Nosotros
+              </span>
+            </li>
+            <li>
+              <span
+                onClick={() => {
+                  scrollToSection('consultados');
+                  setMenuOpen(false);
+                }}
+                className="hover:text-[#32A5DD] transition-colors cursor-pointer"
+              >
+                Consultados
+              </span>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link
+                to="/"
+                className="hover:text-[#32A5DD] transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Inicio
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/historial"
+                className="hover:text-[#32A5DD] transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Historial
+              </Link>
+            </li>
+          </>
+        )}
+      </ul>
       )}
     </nav>
   );
