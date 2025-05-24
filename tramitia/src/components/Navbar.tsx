@@ -1,18 +1,28 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import avionLogo from '../assets/branding/avionLogo.png';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
   const isLanding = location.pathname === '/';
 
-  // Scroll suave al Hero
-  const scrollToHero = () => {
-    const heroSection = document.getElementById('servicio');
-    if (heroSection) {
-      heroSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  // Navegar a la página principal y luego hacer scroll a la sección
+  const scrollToSection = (sectionId: string) => {
+    navigate('/', { replace: true });
+    // Usar setTimeout para asegurar que la navegación se complete antes del scroll
+    setTimeout(() => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  // Ir al inicio de la página principal
+  const goToHome = () => {
+    navigate('/');
   };
 
   return (
@@ -23,9 +33,9 @@ const Navbar = () => {
     >
       <div
         className="flex items-center gap-2 cursor-pointer select-none"
-        onClick={scrollToHero}
+        onClick={goToHome}
         tabIndex={0}
-        aria-label="Ir al inicio (Hero)"
+        aria-label="Ir al inicio"
       >
         <img
           src={avionLogo}
@@ -34,51 +44,54 @@ const Navbar = () => {
         />
       </div>
       <ul className="hidden md:flex gap-10 font-poppins text-lg text-[#2C3E50]">
-        {isLanding ? (
-          <>
-            <li>
-              <a
-                href="#servicio"
-                className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
-              >
-                Servicio
-              </a>
-            </li>
-            <li>
-              <a
-                href="#nosotros"
-                className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
-              >
-                Nosotros
-              </a>
-            </li>
-            <li>
-              <a
-                href="#consultados"
-                className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
-              >
-                Consultados
-              </a>
-            </li>
-          </>
-        ) : (
-          <li>
-            <Link
-              to="/"
-              className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
-            >
-              Inicio
-            </Link>
-          </li>
-        )}
-        <li>
-          <Link
-            to="/historial"
-            className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
-          >
-            Historial
-          </Link>
-        </li>
+      {isLanding ? (
+  <>
+    <li>
+      <span
+        onClick={() => scrollToSection('servicio')}
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
+      >
+        Servicio
+      </span>
+    </li>
+    <li>
+      <span
+        onClick={() => scrollToSection('nosotros')}
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
+      >
+        Nosotros
+      </span>
+    </li>
+    <li>
+      <span
+        onClick={() => scrollToSection('consultados')}
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
+      >
+        Consultados
+      </span>
+    </li>
+  </>
+) : (
+  <>
+    <li>
+      <Link
+        to="/"
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+      >
+        Inicio
+      </Link>
+    </li>
+    <li>
+      <Link
+        to="/historial"
+        className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+      >
+        Historial
+      </Link>
+    </li>
+  </>
+)}
+
       </ul>
       {/* Botón "Acceder" usando Link para SPA */}
       <Link
@@ -112,37 +125,44 @@ const Navbar = () => {
       {/* Menú desplegable en móvil */}
       {menuOpen && (
         <ul className="absolute top-full left-0 w-full bg-[#F5F5F5] shadow-md flex flex-col items-center gap-4 py-4 md:hidden font-poppins text-lg text-[#2C3E50] animate-fade-in z-50">
-          {isLanding ? (
-            <>
-              <li>
-                <a
-                  href="#servicio"
-                  className="hover:text-[#32A5DD] transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Servicio
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#nosotros"
-                  className="hover:text-[#32A5DD] transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Nosotros
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#consultados"
-                  className="hover:text-[#32A5DD] transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Consultados
-                </a>
-              </li>
-            </>
-          ) : (
+        {isLanding ? (
+          <>
+            <li>
+              <span
+                onClick={() => {
+                  scrollToSection('servicio');
+                  setMenuOpen(false);
+                }}
+                className="hover:text-[#32A5DD] transition-colors cursor-pointer"
+              >
+                Servicio
+              </span>
+            </li>
+            <li>
+              <span
+                onClick={() => {
+                  scrollToSection('nosotros');
+                  setMenuOpen(false);
+                }}
+                className="hover:text-[#32A5DD] transition-colors cursor-pointer"
+              >
+                Nosotros
+              </span>
+            </li>
+            <li>
+              <span
+                onClick={() => {
+                  scrollToSection('consultados');
+                  setMenuOpen(false);
+                }}
+                className="hover:text-[#32A5DD] transition-colors cursor-pointer"
+              >
+                Consultados
+              </span>
+            </li>
+          </>
+        ) : (
+          <>
             <li>
               <Link
                 to="/"
@@ -152,17 +172,18 @@ const Navbar = () => {
                 Inicio
               </Link>
             </li>
-          )}
-          <li>
-            <Link
-              to="/historial"
-              className="hover:text-[#32A5DD] transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              Historial
-            </Link>
-          </li>
-        </ul>
+            <li>
+              <Link
+                to="/historial"
+                className="hover:text-[#32A5DD] transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Historial
+              </Link>
+            </li>
+          </>
+        )}
+      </ul>
       )}
     </nav>
   );

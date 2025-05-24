@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import Login from './components/Login';
 import Register from './components/Register';
+import LibretaMilitar from './pages/LibretaMilitar';
+import RUNT from './pages/RUNT';
 import PerfilUsuario from './components/PerfilUsuario';
 import Premium from './components/Premium';
 import Navbar from './components/Navbar';
@@ -32,6 +34,8 @@ const Router = () => {
             </div>
           </>
         } />
+        <Route path="/tramites/libreta-militar" element={<LibretaMilitar />} />
+        <Route path="/tramites/runt" element={<RUNT />} />
       </Routes>
     </BrowserRouter>
   );

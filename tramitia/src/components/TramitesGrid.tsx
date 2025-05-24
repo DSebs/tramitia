@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import TramiteCard from './TramiteCard';
 import libretaMilitarImg from '../assets/imgTramites/Libreta Militar.jpg';
 import pasaporteImg from '../assets/imgTramites/Pasaporte.jpeg';
@@ -16,6 +17,18 @@ const tramites = [
 ];
 
 const TramitesGrid = () => {
+  const navigate = useNavigate();
+
+  const handleTramiteClick = (tramiteTitle: string) => {
+    if (tramiteTitle === 'Libreta Militar') {
+      navigate('/tramites/libreta-militar');
+    } else if (tramiteTitle === 'RUNT') {
+      navigate('/tramites/runt');
+    } else {
+      console.log(`Ir a sección de ${tramiteTitle}`);
+    }
+  };
+
   return (
     <section id="consultados" className="w-full flex flex-col items-center justify-center mt-28 px-2">
       <h2 className="text-2xl sm:text-3xl font-poppins font-bold text-[#2C3E50] mb-8 text-center">
@@ -27,7 +40,7 @@ const TramitesGrid = () => {
             key={tramite.title}
             title={tramite.title}
             image={tramite.image}
-            onClick={() => console.log(`Ir a sección de ${tramite.title}`)}
+            onClick={() => handleTramiteClick(tramite.title)}
           />
         ))}
       </div>
