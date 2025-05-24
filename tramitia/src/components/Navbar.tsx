@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom'; 
 import avionLogo from '../assets/branding/avionLogo.png';
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
 
   // Scroll suave al Hero
   const scrollToHero = () => {
@@ -31,29 +34,50 @@ const Navbar = () => {
         />
       </div>
       <ul className="hidden md:flex gap-10 font-poppins text-lg text-[#2C3E50]">
+        {isLanding ? (
+          <>
+            <li>
+              <a
+                href="#servicio"
+                className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+              >
+                Servicio
+              </a>
+            </li>
+            <li>
+              <a
+                href="#nosotros"
+                className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+              >
+                Nosotros
+              </a>
+            </li>
+            <li>
+              <a
+                href="#consultados"
+                className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+              >
+                Consultados
+              </a>
+            </li>
+          </>
+        ) : (
+          <li>
+            <Link
+              to="/"
+              className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
+            >
+              Inicio
+            </Link>
+          </li>
+        )}
         <li>
-          <a
-            href="#servicio"
+          <Link
+            to="/historial"
             className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
           >
-            Servicio
-          </a>
-        </li>
-        <li>
-          <a
-            href="#nosotros"
-            className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
-          >
-            Nosotros
-          </a>
-        </li>
-        <li>
-          <a
-            href="#consultados"
-            className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors"
-          >
-            Consultados
-          </a>
+            Historial
+          </Link>
         </li>
       </ul>
       {/* Botón "Acceder" usando Link para SPA */}
@@ -88,32 +112,55 @@ const Navbar = () => {
       {/* Menú desplegable en móvil */}
       {menuOpen && (
         <ul className="absolute top-full left-0 w-full bg-[#F5F5F5] shadow-md flex flex-col items-center gap-4 py-4 md:hidden font-poppins text-lg text-[#2C3E50] animate-fade-in z-50">
+          {isLanding ? (
+            <>
+              <li>
+                <a
+                  href="#servicio"
+                  className="hover:text-[#32A5DD] transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Servicio
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#nosotros"
+                  className="hover:text-[#32A5DD] transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Nosotros
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#consultados"
+                  className="hover:text-[#32A5DD] transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Consultados
+                </a>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link
+                to="/"
+                className="hover:text-[#32A5DD] transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Inicio
+              </Link>
+            </li>
+          )}
           <li>
-            <a
-              href="#servicio"
-              className="hover:text-[#DFFFD8] transition-colors"
+            <Link
+              to="/historial"
+              className="hover:text-[#32A5DD] transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              Servicio
-            </a>
-          </li>
-          <li>
-            <a
-              href="#nosotros"
-              className="hover:text-[#DFFFD8] transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              Nosotros
-            </a>
-          </li>
-          <li>
-            <a
-              href="#consultados"
-              className="hover:text-[#DFFFD8] transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              Consultados
-            </a>
+              Historial
+            </Link>
           </li>
         </ul>
       )}

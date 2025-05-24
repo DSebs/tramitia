@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import PricingCard from './PricingCard';
 
 const plans = [
@@ -27,13 +28,28 @@ const plans = [
       { text: 'Gestor de carpetas y checklist para documentos y formularios', included: true },
       { text: 'Configuracion de recordatorios y alertas para fechas criticas', included: true },
     ],
-    buttonText: 'Suscribete a Premium',
+    buttonText: 'Suscríbete a Premium',
     buttonColor: 'bg-[#2C3E50] text-[#DFFFD8] hover:bg-[#4B6A89] hover:text-[#f5ffe6]',
     highlighted: true,
   },
 ];
 
 const PricingSection = () => {
+  const navigate = useNavigate();
+
+  const handlePlanClick = (planTitle: string) => {
+    switch (planTitle) {
+      case 'Plan Premium':
+        navigate('/premium');
+        break;
+      case 'Plan Gratuito':
+        navigate('/login');
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <section className="w-screen max-w-none min-h-[70vh] flex flex-col items-center justify-center py-24 md:py-32 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]" style={{ position: 'relative', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
       {/* Fondo gradiente absoluto */}
@@ -44,7 +60,7 @@ const PricingSection = () => {
           {plans.map((plan) => (
             <div key={plan.title} className="flex justify-center">
               <div className="w-full max-w-md transition-transform hover:-translate-y-1 hover:shadow-2xl">
-                <PricingCard {...plan} />
+                <PricingCard {...plan} onClick={() => handlePlanClick(plan.title)} />
               </div>
             </div>
           ))}

@@ -12,6 +12,7 @@ interface PricingCardProps {
   buttonText: string;
   buttonColor: string;
   highlighted?: boolean;
+  onClick?: () => void;
 }
 
 const PricingCard = ({
@@ -23,6 +24,7 @@ const PricingCard = ({
   buttonText,
   buttonColor,
   highlighted = false,
+  onClick,
 }: PricingCardProps) => {
   return (
     <div className={`flex flex-col bg-white rounded-xl shadow-lg p-8 md:p-12 w-full max-w-md border ${highlighted ? 'border-blue-400' : 'border-gray-200'} transition-transform hover:-translate-y-1 hover:shadow-2xl`}>
@@ -49,6 +51,7 @@ const PricingCard = ({
       <button
         className={`mt-auto w-full py-3 rounded-lg font-nunito font-semibold text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${buttonColor}`}
         type="button"
+        onClick={onClick}
       >
         {buttonText}
       </button>
