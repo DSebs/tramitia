@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import logo from '../assets/branding/tramitiaBannerREC.png';
-import { Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, } from '../firebaseConfig';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 const Register = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   
   const [formData, setFormData] = useState({
     nombre: '',
@@ -20,24 +21,59 @@ const Register = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    // Validar que las contraseñas coincidan
+    if (formData.contraseña !== formData.confirmarContraseña) {
+      setError('Las contraseñas no coinciden');
+      setIsLoading(false);
+      return;
+    }
+
+    // Validar longitud de contraseña
+    if (formData.contraseña.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, formData.correo, formData.contraseña);
-      if (formData.contraseña !== formData.confirmarContraseña) {
-        alert('Las contraseñas no coinciden');
-        return;
-      }
-      const user = userCredential.user;
-      console.log('Usuario registrado:', user.email);
-      navigate('/'); // Redirige al home
-    } catch (error) {
+      
+      // Actualizar el perfil del usuario con el nombre
+      await updateProfile(userCredential.user, {
+        displayName: `${formData.nombre} ${formData.apellidos}`.trim()
+      });
+
+      console.log('Usuario registrado:', userCredential.user.email);
+      // El AuthProvider manejará la navegación automáticamente
+      navigate('/historial');
+    } catch (error: any) {
       console.error('Error al registrar usuario:', error);
+      
+      // Manejar errores específicos de Firebase
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          setError('Este correo electrónico ya está registrado');
+          break;
+        case 'auth/invalid-email':
+          setError('El correo electrónico no es válido');
+          break;
+        case 'auth/weak-password':
+          setError('La contraseña es muy débil');
+          break;
+        default:
+          setError('Error al crear la cuenta. Por favor intenta de nuevo.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-r from-[#eef5fb] to-[#c0e1f9] overflow-auto">
@@ -47,7 +83,13 @@ const Register = () => {
           <p className="text-gray-600 mb-4 text-2xl font-bold font-poppins">Crea tu cuenta</p>
         </div>
 
-        <form className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-6">
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-2xl mx-auto mb-6">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleRegister} className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-6">
           <div>
             <label htmlFor="nombre" className="block text-black mb-2 font-bold font-poppins">Nombre</label>
             <input
@@ -58,7 +100,8 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Digita tu nombre"
               required
-              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
+              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
             />
           </div>
 
@@ -72,7 +115,8 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Digita tus apellidos"
               required
-              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
+              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
             />
           </div>
 
@@ -86,7 +130,8 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Digita tu correo"
               required
-              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
+              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
             />
           </div>
 
@@ -100,7 +145,8 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Ciudad de residencia"
               required
-              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
+              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
             />
           </div>
 
@@ -112,9 +158,10 @@ const Register = () => {
               name="contraseña"
               value={formData.contraseña}
               onChange={handleChange}
-              placeholder="Digita tu contraseña"
+              placeholder="Digita tu contraseña (mín. 6 caracteres)"
               required
-              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
+              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
             />
           </div>
 
@@ -128,7 +175,8 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Confirma tu contraseña"
               required
-              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
+              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
             />
           </div>
 
@@ -140,7 +188,8 @@ const Register = () => {
               value={formData.genero}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
+              className="w-full px-4 py-3 border-2 bg-white text-black border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
             >
               <option value="" disabled>Selecciona una opción</option>
               <option value="masculino">Masculino</option>
@@ -149,20 +198,18 @@ const Register = () => {
               <option value="prefiero-no-decirlo">Prefiero no decirlo</option>
             </select>
           </div>
+
+          {/* Botón de Registro */}
+          <div className="col-span-2">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-[#5bb0d4] hover:bg-[#419bc3] text-white py-3 rounded-full font-bold shadow transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'Creando cuenta...' : 'Completar Registro'}
+            </button>
+          </div>
         </form>
-
-        {/* Botón de Registro */}
-        <div className="max-w-2xl mx-auto mb-6">
-          <button
-            type="submit"
-            onClick={handleRegister}
-            className="w-full bg-[#5bb0d4] hover:bg-[#419bc3] text-white py-3 rounded-full font-bold shadow transition-colors"
-          >
-            Completar Registro
-          </button>
-        </div>
-
-     
 
         {/* Enlace a Login */}
         <p className="text-sm text-gray-600 max-w-2xl mx-auto text-center">

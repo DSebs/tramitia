@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TramiteCard from './TramiteCard';
+import ComingSoonModal from './ComingSoonModal';
 import libretaMilitarImg from '../assets/imgTramites/Libreta Militar.jpg';
 import pasaporteImg from '../assets/imgTramites/Pasaporte.jpeg';
 import licenciaImg from '../assets/imgTramites/Licencia.jpg';
@@ -18,6 +20,8 @@ const tramites = [
 
 const TramitesGrid = () => {
   const navigate = useNavigate();
+  const [showComingSoon, setShowComingSoon] = useState(false);
+  const [selectedTramite, setSelectedTramite] = useState('');
 
   const handleTramiteClick = (tramiteTitle: string) => {
     if (tramiteTitle === 'Libreta Militar') {
@@ -25,8 +29,14 @@ const TramitesGrid = () => {
     } else if (tramiteTitle === 'RUNT') {
       navigate('/tramites/runt');
     } else {
-      console.log(`Ir a sección de ${tramiteTitle}`);
+      setSelectedTramite(tramiteTitle);
+      setShowComingSoon(true);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowComingSoon(false);
+    setSelectedTramite('');
   };
 
   return (
@@ -44,6 +54,12 @@ const TramitesGrid = () => {
           />
         ))}
       </div>
+      
+      <ComingSoonModal
+        isOpen={showComingSoon}
+        onClose={handleCloseModal}
+        tramiteTitle={selectedTramite}
+      />
     </section>
   );
 };
