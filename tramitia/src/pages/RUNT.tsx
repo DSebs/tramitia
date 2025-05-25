@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import HoverTooltip from '../components/HoverTooltip';
+import { useAuth } from '../contexts/AuthContext';
 import runtImg from '../assets/imgTramites/runt.jpeg';
 import papeleoDoodle from '../assets/LibretaMilitar/papeleo_doodle.png';
 import filaDoodle from '../assets/LibretaMilitar/fila_doodle.png';
@@ -11,13 +12,31 @@ import mapaImg from '../assets/LibretaMilitar/Mapa.png';
 const RUNT = () => {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
+  const navigate = useNavigate();
+  const { currentUser, isPremium } = useAuth();
 
   const handlePremiumClick = () => {
-    setShowPremiumModal(true);
+    if (!currentUser) {
+      // Usuario no autenticado - redirigir a login
+      navigate('/login');
+    } else if (!isPremium) {
+      // Usuario free - redirigir a premium
+      navigate('/premium');
+    } else {
+      // Usuario premium - redirigir a asistente (por ahora mostrar modal)
+      setShowPremiumModal(true);
+    }
   };
 
   const handleCloseModal = () => {
     setShowPremiumModal(false);
+  };
+
+  // Función para obtener el texto del botón según el estado del usuario
+  const getButtonText = () => {
+    if (!currentUser) return "¡Inicia Sesión!";
+    if (!isPremium) return "Suscríbete a Premium";
+    return "Ruta Personalizada";
   };
 
   // Datos para el paso a paso
@@ -104,9 +123,9 @@ const RUNT = () => {
               </p>
               <button
                 onClick={handlePremiumClick}
-                className="bg-[#DFFFD8] text-[#2C3E50] font-nunito px-6 py-3 rounded-lg shadow hover:bg-[#d1f7d1] transition-colors focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="bg-gradient-to-r from-[#AED6F1] to-[#DFFFD8] text-[#2C3E50] font-nunito px-6 py-3 rounded-lg shadow hover:from-[#9BC5E8] hover:to-[#d1f7d1] transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
-                Suscríbete a Premium
+                {getButtonText()}
               </button>
             </div>
           </div>
@@ -373,15 +392,18 @@ const RUNT = () => {
         </div>
       </section>
 
-      {/* Premium Modal */}
+      {/* Premium Modal - Actualizado para usuarios premium */}
       {showPremiumModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
             <h3 className="text-2xl font-poppins font-bold text-[#2C3E50] mb-4">
-              Suscripción Premium
+              {isPremium ? 'Asistente Personalizado' : 'Suscripción Premium'}
             </h3>
             <p className="text-[#2C3E50] mb-6">
-              Accede a contenido exclusivo y herramientas avanzadas para gestionar tus trámites de manera más eficiente.
+              {isPremium 
+                ? 'El asistente personalizado estará disponible próximamente. Te ayudará a crear una ruta específica para tu trámite.'
+                : 'Accede a contenido exclusivo y herramientas avanzadas para gestionar tus trámites de manera más eficiente.'
+              }
             </p>
             <div className="flex gap-4">
               <button
@@ -390,13 +412,15 @@ const RUNT = () => {
               >
                 Cerrar
               </button>
-              <Link
-                to="/pricing"
-                className="flex-1 bg-[#32A5DD] text-white py-2 px-4 rounded-lg hover:bg-[#2891C7] transition-colors text-center"
-                onClick={handleCloseModal}
-              >
-                Ver Planes
-              </Link>
+              {!isPremium && (
+                <Link
+                  to="/premium"
+                  className="flex-1 bg-[#32A5DD] text-white py-2 px-4 rounded-lg hover:bg-[#2891C7] transition-colors text-center"
+                  onClick={handleCloseModal}
+                >
+                  Ver Planes
+                </Link>
+              )}
             </div>
           </div>
         </div>

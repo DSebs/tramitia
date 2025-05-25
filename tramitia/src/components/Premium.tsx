@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import tramitiaLogo from '../assets/branding/tramitiaBannerREC.png';
+import { useAuth } from '../contexts/AuthContext';
 
 const Premium = () => {
   const [email, setEmail] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
+  const { currentUser, upgradeToPremium } = useAuth();
 
   const beneficios = [
     'Acceso a la información de todos los trámites',
@@ -15,23 +18,43 @@ const Premium = () => {
   ];
 
   const handleContinue = () => {
-    if (email) {
+    if (email || currentUser?.email) {
       setShowConfirmation(true);
     }
   };
 
-  const handleConfirm = (confirmed: boolean) => {
+  const handleConfirm = async (confirmed: boolean) => {
     if (confirmed) {
-      navigate('/historial');
+      setIsProcessing(true);
+      try {
+        const success = await upgradeToPremium();
+        if (success) {
+          // Redirigir al historial después de un upgrade exitoso
+          navigate('/historial');
+        } else {
+          alert('Hubo un error al procesar tu suscripción. Por favor intenta de nuevo.');
+        }
+      } catch (error) {
+        console.error('Error upgrading to premium:', error);
+        alert('Hubo un error al procesar tu suscripción. Por favor intenta de nuevo.');
+      } finally {
+        setIsProcessing(false);
+        setShowConfirmation(false);
+      }
     } else {
       setShowConfirmation(false);
     }
   };
 
+  // Pre-llenar el email si el usuario está autenticado
+  const displayEmail = currentUser?.email || email;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#32A5DD]/20 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      {/* Logo principal */}
-      <img src={tramitiaLogo} alt="Tramitia" className="h-16 mb-8" />
+      {/* Logo principal como banner dominante */}
+      <div className="w-full max-w-6xl mb-12 flex justify-center">
+        <img src={tramitiaLogo} alt="Tramitia" className="h-32 md:h-40 lg:h-48 w-auto object-contain" />
+      </div>
       
       <div className="w-full max-w-5xl bg-white rounded-lg border border-[#32A5DD]/20 overflow-hidden">
         {/* Título */}
@@ -66,9 +89,9 @@ const Premium = () => {
               <div className="flex items-center justify-end gap-2">
                 <span className="text-3xl font-bold text-[#2C3E50]">$ 18.000</span>
                 <div className="flex items-center">
-                  <span className="text-yellow-400">C</span>
-                  <span className="text-[#32A5DD]">O</span>
-                  <span className="text-red-500">P</span>
+                  <span className="text-yellow-400 font-poppins font-bold text-xl">C</span>
+                  <span className="text-[#32A5DD] font-poppins font-bold text-xl">O</span>
+                  <span className="text-red-500 font-poppins font-bold text-xl">P</span>
                 </div>
                 <span className="text-sm text-[#2C3E50] border border-[#2C3E50]/20 rounded-full px-2 py-0.5 ml-1">
                   mensual
@@ -94,11 +117,17 @@ const Premium = () => {
               <input
                 type="email"
                 id="email"
-                value={email}
+                value={displayEmail}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2 bg-white text-[#2C3E50] border border-[#32A5DD]/20 rounded-md focus:outline-none focus:ring-2 focus:ring-[#32A5DD]/50"
+                disabled={!!currentUser?.email}
+                className={`w-full p-2 text-[#2C3E50] border border-[#32A5DD]/20 rounded-md focus:outline-none focus:ring-2 focus:ring-[#32A5DD]/50 ${
+                  currentUser?.email ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                }`}
                 placeholder="Digita tu correo"
               />
+              {currentUser?.email && (
+                <p className="text-xs text-gray-500 mt-1">Email de tu cuenta actual</p>
+              )}
             </div>
             <div className="flex-1">
               <label htmlFor="payment" className="block text-[#2C3E50] font-medium mb-1">
@@ -121,9 +150,10 @@ const Premium = () => {
             </div>
             <button
               onClick={handleContinue}
-              className="bg-[#2C3E50] text-white px-8 py-2 rounded-md hover:bg-[#4B6A89] transition-colors"
+              disabled={isProcessing}
+              className="bg-[#2C3E50] text-white px-8 py-2 rounded-md hover:bg-[#4B6A89] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Continuar
+              {isProcessing ? 'Procesando...' : 'Continuar'}
             </button>
           </div>
         </div>
@@ -142,13 +172,15 @@ const Premium = () => {
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => handleConfirm(true)}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+                disabled={isProcessing}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors disabled:opacity-50"
               >
-                Sí
+                {isProcessing ? 'Procesando...' : 'Sí'}
               </button>
               <button
                 onClick={() => handleConfirm(false)}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                disabled={isProcessing}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors disabled:opacity-50"
               >
                 No
               </button>
