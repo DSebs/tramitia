@@ -12,7 +12,7 @@ const HoverTooltip = ({ term, explanation, children, className = '' }: HoverTool
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const elementRef = useRef<HTMLSpanElement>(null);
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
+  const handleMouseEnter = () => {
     if (elementRef.current) {
       const rect = elementRef.current.getBoundingClientRect();
       setPosition({
