@@ -2,8 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import { createOrUpdateUser, getUserData, updatePremiumStatus } from '../services/userService';
-import type { UserData } from '../services/userService';
+import { createOrUpdateUser, getUserData, updatePremiumStatus, addToFavorites, removeFromFavorites, addReminder, removeReminder, addFolder, updateFolder, removeFolder } from '../services/userService';
+import type { UserData, Tramite, Reminder, Folder } from '../services/userService';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -12,6 +12,13 @@ interface AuthContextType {
   loading: boolean;
   upgradeToPremium: () => Promise<boolean>;
   logout: () => Promise<void>;
+  addFavorite: (tramite: Tramite) => Promise<boolean>;
+  removeFavorite: (tramiteId: string) => Promise<boolean>;
+  addUserReminder: (reminder: Omit<Reminder, 'id' | 'createdAt'>) => Promise<Reminder | null>;
+  removeUserReminder: (reminderId: string) => Promise<boolean>;
+  addUserFolder: (folder: Omit<Folder, 'id' | 'createdAt'>) => Promise<Folder | null>;
+  updateUserFolder: (folderId: string, folderData: Omit<Folder, 'id' | 'createdAt'>) => Promise<boolean>;
+  removeUserFolder: (folderId: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -75,6 +82,143 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const addFavorite = async (tramite: Tramite): Promise<boolean> => {
+    if (!currentUser) return false;
+    
+    try {
+      const success = await addToFavorites(currentUser.uid, tramite);
+      if (success && userData) {
+        const updatedFavorites = [...(userData.favorites || []), tramite];
+        setUserData({
+          ...userData,
+          favorites: updatedFavorites,
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error('Error adding favorite:', error);
+      return false;
+    }
+  };
+
+  const removeFavorite = async (tramiteId: string): Promise<boolean> => {
+    if (!currentUser) return false;
+    
+    try {
+      const success = await removeFromFavorites(currentUser.uid, tramiteId);
+      if (success && userData) {
+        const updatedFavorites = (userData.favorites || []).filter(fav => fav.id !== tramiteId);
+        setUserData({
+          ...userData,
+          favorites: updatedFavorites,
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+      return false;
+    }
+  };
+
+  const addUserReminder = async (reminder: Omit<Reminder, 'id' | 'createdAt'>): Promise<Reminder | null> => {
+    if (!currentUser) return null;
+    
+    try {
+      const newReminder = await addReminder(currentUser.uid, reminder);
+      if (newReminder && userData) {
+        const updatedReminders = [...(userData.reminders || []), newReminder];
+        setUserData({
+          ...userData,
+          reminders: updatedReminders,
+        });
+      }
+      return newReminder;
+    } catch (error) {
+      console.error('Error adding reminder:', error);
+      return null;
+    }
+  };
+
+  const removeUserReminder = async (reminderId: string): Promise<boolean> => {
+    if (!currentUser) return false;
+    
+    try {
+      const success = await removeReminder(currentUser.uid, reminderId);
+      if (success && userData) {
+        const updatedReminders = (userData.reminders || []).filter(reminder => reminder.id !== reminderId);
+        setUserData({
+          ...userData,
+          reminders: updatedReminders,
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error('Error removing reminder:', error);
+      return false;
+    }
+  };
+
+  const addUserFolder = async (folder: Omit<Folder, 'id' | 'createdAt'>): Promise<Folder | null> => {
+    if (!currentUser) return null;
+    
+    try {
+      const newFolder = await addFolder(currentUser.uid, folder);
+      if (newFolder && userData) {
+        const updatedFolders = [...(userData.folders || []), newFolder];
+        setUserData({
+          ...userData,
+          folders: updatedFolders,
+        });
+      }
+      return newFolder;
+    } catch (error) {
+      console.error('Error adding folder:', error);
+      return null;
+    }
+  };
+
+  const updateUserFolder = async (folderId: string, folderData: Omit<Folder, 'id' | 'createdAt'>): Promise<boolean> => {
+    if (!currentUser) return false;
+    
+    try {
+      const success = await updateFolder(currentUser.uid, folderId, folderData);
+      if (success && userData) {
+        const updatedFolders = (userData.folders || []).map(folder => 
+          folder.id === folderId 
+            ? { ...folder, ...folderData }
+            : folder
+        );
+        setUserData({
+          ...userData,
+          folders: updatedFolders,
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error('Error updating folder:', error);
+      return false;
+    }
+  };
+
+  const removeUserFolder = async (folderId: string): Promise<boolean> => {
+    if (!currentUser) return false;
+    
+    try {
+      const success = await removeFolder(currentUser.uid, folderId);
+      if (success && userData) {
+        const updatedFolders = (userData.folders || []).filter(folder => folder.id !== folderId);
+        setUserData({
+          ...userData,
+          folders: updatedFolders,
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error('Error removing folder:', error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
@@ -98,6 +242,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
     upgradeToPremium,
     logout,
+    addFavorite,
+    removeFavorite,
+    addUserReminder,
+    removeUserReminder,
+    addUserFolder,
+    updateUserFolder,
+    removeUserFolder,
   };
 
   return (
