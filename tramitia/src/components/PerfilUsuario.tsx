@@ -2,16 +2,24 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TramiteCard from './TramiteCard';
 import ComingSoonModal from './ComingSoonModal';
+import AddFavoriteModal from './AddFavoriteModal';
+import AddReminderModal from './AddReminderModal';
+import FolderModal from './FolderModal';
 import libretaMilitarImg from '../assets/imgTramites/Libreta Militar.jpg';
 import pasaporteImg from '../assets/imgTramites/Pasaporte.jpeg';
 import licenciaImg from '../assets/imgTramites/Licencia.jpg';
 import { useAuth } from '../contexts/AuthContext';
+import type { Tramite, Reminder, Folder } from '../services/userService';
 
 const PerfilUsuario = () => {
   const navigate = useNavigate();
-  const { currentUser, isPremium, userData } = useAuth();
+  const { currentUser, isPremium, userData, addFavorite, removeFavorite, addUserReminder, removeUserReminder, addUserFolder, updateUserFolder, removeUserFolder } = useAuth();
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [selectedTramite, setSelectedTramite] = useState('');
+  const [showAddFavorite, setShowAddFavorite] = useState(false);
+  const [showAddReminder, setShowAddReminder] = useState(false);
+  const [showFolderModal, setShowFolderModal] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState<Folder | undefined>(undefined);
   
   const historialTramites = [
     { title: 'Libreta Militar', image: libretaMilitarImg },
@@ -19,26 +27,17 @@ const PerfilUsuario = () => {
     { title: 'Licencia de Conduccion', image: licenciaImg },
   ];
 
-  const favoritosTramites = [
-    { title: 'Libreta Militar', image: libretaMilitarImg },
-    { title: 'Pasaporte', image: pasaporteImg },
-  ];
-
-  // Datos adicionales para usuarios premium
-  const recordatorios = [
-    { tramite: 'Libreta Militar', fecha: '02/04/2025', tipo: 'Renovación' },
-    { tramite: 'Pasaporte', fecha: '02/04/2025', tipo: 'Vencimiento' },
-  ];
-
-  const carpetas = [
-    { tramite: 'Libreta Militar', documentos: 5, fecha: '02/04/2005' },
-    { tramite: 'Pasaporte', documentos: 3, fecha: '02/04/2005' },
-  ];
+  // Obtener datos del usuario
+  const favoritosTramites = userData?.favorites || [];
+  const recordatorios = userData?.reminders || [];
+  const carpetas = userData?.folders || [];
 
   // Función para manejar clics en trámites
   const handleTramiteClick = (tramiteTitle: string) => {
     if (tramiteTitle === 'Libreta Militar') {
       navigate('/tramites/libreta-militar');
+    } else if (tramiteTitle === 'RUNT') {
+      navigate('/tramites/runt');
     } else {
       // Mostrar modal "Esperalo pronto" para otros trámites
       setSelectedTramite(tramiteTitle);
@@ -49,6 +48,47 @@ const PerfilUsuario = () => {
   const handleCloseModal = () => {
     setShowComingSoon(false);
     setSelectedTramite('');
+  };
+
+  const handleAddFavorite = async (tramite: Tramite) => {
+    await addFavorite(tramite);
+    setShowAddFavorite(false);
+  };
+
+  const handleRemoveFavorite = async (tramiteId: string) => {
+    await removeFavorite(tramiteId);
+  };
+
+  const handleAddReminder = async (reminder: Omit<Reminder, 'id' | 'createdAt'>) => {
+    await addUserReminder(reminder);
+    setShowAddReminder(false);
+  };
+
+  const handleRemoveReminder = async (reminderId: string) => {
+    await removeUserReminder(reminderId);
+  };
+
+  const handleAddFolder = async (folder: Omit<Folder, 'id' | 'createdAt'>) => {
+    await addUserFolder(folder);
+    setShowFolderModal(false);
+    setSelectedFolder(undefined);
+  };
+
+  const handleUpdateFolder = async (folder: Omit<Folder, 'id' | 'createdAt'>) => {
+    if (selectedFolder) {
+      await updateUserFolder(selectedFolder.id, folder);
+      setShowFolderModal(false);
+      setSelectedFolder(undefined);
+    }
+  };
+
+  const handleRemoveFolder = async (folderId: string) => {
+    await removeUserFolder(folderId);
+  };
+
+  const handleEditFolder = (folder: Folder) => {
+    setSelectedFolder(folder);
+    setShowFolderModal(true);
   };
 
   return (
@@ -110,16 +150,26 @@ const PerfilUsuario = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {favoritosTramites.map((tramite) => (
-            <TramiteCard
-              key={tramite.title}
-              title={tramite.title}
-              image={tramite.image}
-              onClick={() => handleTramiteClick(tramite.title)}
-            />
+            <div key={tramite.id} className="relative group">
+              <TramiteCard
+                title={tramite.title}
+                image={tramite.image}
+                onClick={() => handleTramiteClick(tramite.title)}
+              />
+              <button
+                onClick={() => handleRemoveFavorite(tramite.id)}
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                title="Remover de favoritos"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           ))}
           <button
             className="flex items-center justify-center w-full h-full min-h-[200px] bg-[#F5F5F5] rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-400 transition-colors"
-            onClick={() => console.log('Agregar nuevo favorito')}
+            onClick={() => setShowAddFavorite(true)}
           >
             <span className="text-4xl text-gray-400">+</span>
           </button>
@@ -140,22 +190,33 @@ const PerfilUsuario = () => {
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {recordatorios.map((recordatorio, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+              {recordatorios.map((recordatorio) => (
+                <div key={recordatorio.id} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm relative group">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-[#2C3E50]">{recordatorio.tramite}</h3>
-                      <p className="text-sm text-gray-600">{recordatorio.tipo}</p>
+                      <h3 className="font-semibold text-[#2C3E50]">{recordatorio.tramiteTitle}</h3>
+                      <p className="text-sm text-gray-600">{recordatorio.message}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-[#32A5DD]">{recordatorio.fecha}</p>
+                      <p className="text-sm font-medium text-[#32A5DD]">
+                        {new Date(recordatorio.date).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
+                  <button
+                    onClick={() => handleRemoveReminder(recordatorio.id)}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                    title="Eliminar recordatorio"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
               ))}
               <button
                 className="flex items-center justify-center h-24 bg-[#F5F5F5] rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-400 transition-colors"
-                onClick={() => console.log('Agregar recordatorio')}
+                onClick={() => setShowAddReminder(true)}
               >
                 <span className="text-2xl text-gray-400">+</span>
               </button>
@@ -173,22 +234,53 @@ const PerfilUsuario = () => {
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {carpetas.map((carpeta, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-[#2C3E50]">{carpeta.tramite}</h3>
-                      <p className="text-sm text-gray-600">{carpeta.documentos} documentos</p>
+              {carpetas.map((carpeta) => {
+                const completedDocs = carpeta.documents.filter(doc => doc.completed).length;
+                const totalDocs = carpeta.documents.length;
+                const progressPercentage = totalDocs > 0 ? (completedDocs / totalDocs) * 100 : 0;
+                
+                return (
+                  <div key={carpeta.id} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm relative group cursor-pointer hover:shadow-md transition-shadow"
+                       onClick={() => handleEditFolder(carpeta)}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h3 className="font-semibold text-[#2C3E50]">{carpeta.tramiteTitle}</h3>
+                        <p className="text-sm text-gray-600">{completedDocs}/{totalDocs} documentos completados</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-[#32A5DD]">
+                          {carpeta.createdAt.toLocaleDateString()}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-[#32A5DD]">{carpeta.fecha}</p>
+                    
+                    {/* Barra de progreso */}
+                    <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                      <div 
+                        className="bg-gradient-to-r from-[#AED6F1] to-[#DFFFD8] h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${progressPercentage}%` }}
+                      ></div>
                     </div>
+                    <p className="text-xs text-gray-500">{Math.round(progressPercentage)}% completado</p>
+                    
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFolder(carpeta.id);
+                      }}
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                      title="Eliminar carpeta"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               <button
                 className="flex items-center justify-center h-24 bg-[#F5F5F5] rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-400 transition-colors"
-                onClick={() => console.log('Crear carpeta')}
+                onClick={() => setShowFolderModal(true)}
               >
                 <span className="text-2xl text-gray-400">+</span>
               </button>
@@ -234,6 +326,30 @@ const PerfilUsuario = () => {
         isOpen={showComingSoon}
         onClose={handleCloseModal}
         tramiteTitle={selectedTramite}
+      />
+
+      <AddFavoriteModal
+        isOpen={showAddFavorite}
+        onClose={() => setShowAddFavorite(false)}
+        onAddFavorite={handleAddFavorite}
+        currentFavorites={favoritosTramites}
+      />
+
+      <AddReminderModal
+        isOpen={showAddReminder}
+        onClose={() => setShowAddReminder(false)}
+        onAddReminder={handleAddReminder}
+      />
+
+      <FolderModal
+        isOpen={showFolderModal}
+        onClose={() => {
+          setShowFolderModal(false);
+          setSelectedFolder(undefined);
+        }}
+        folder={selectedFolder}
+        onSaveFolder={selectedFolder ? handleUpdateFolder : handleAddFolder}
+        existingFolders={carpetas}
       />
     </div>
   );

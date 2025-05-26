@@ -51,7 +51,7 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="w-screen max-w-none min-h-[70vh] flex flex-col items-center justify-center py-24 md:py-32 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]" style={{ position: 'relative', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
+    <section id="pricing" className="w-screen max-w-none min-h-[70vh] flex flex-col items-center justify-center py-24 md:py-32 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]" style={{ position: 'relative', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
       {/* Fondo gradiente absoluto */}
       <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-[#2C3E50] to-[#648DB6] z-0" aria-hidden="true" />
       <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center">

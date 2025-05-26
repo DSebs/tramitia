@@ -69,7 +69,7 @@ const Navbar = () => {
           <>
             <li>
               <span
-                onClick={() => scrollToSection('servicio')}
+                onClick={() => scrollToSection('pricing')}
                 className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
               >
                 Servicio
