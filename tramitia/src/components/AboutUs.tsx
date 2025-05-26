@@ -10,8 +10,8 @@ const AboutUs = () => {
         >
           ¿Quienes Somos?
         </h2>
-        <p className="font-inter text-lg text-white max-w-md text-left leading-relaxed py-4">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur consectetur, nisi nisi euismod euismod, euismod euismod nisi nisi euismod. Pellentesque euismod, nisi eu consectetur consectetur, nisi nisi euismod euismod, euismod euismod nisi nisi euismod.
+        <p className="font-inter text-lg text-white max-w-lg text-left leading-relaxed py-4">
+          Nacimos de una necesidad muy real: entender y completar trámites sin estrés, sin vueltas innecesarias, y sin sentir que necesitas un traductor solo para leer una página oficial. Somos una plataforma pensada por personas como tú, para personas como tú. Queremos que tengas la información clara, los pasos al alcance de un clic, y que sientas que por fin alguien se puso en tus zapatos. Tramitia está aquí para hacerte la vida más fácil, acompañarte en cada paso y demostrar que sí se puede hacer trámites sin perder la cabeza.
         </p>
       </div>
       <style>{`

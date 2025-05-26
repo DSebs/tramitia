@@ -8,14 +8,16 @@ import PerfilUsuario from './components/PerfilUsuario';
 import Premium from './components/Premium';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './contexts/AuthContext';
+import { AccessibilityProvider } from './contexts/AccessibilityContext';
 
 // Componente simple para pruebas
 
 
 const Router = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <AccessibilityProvider>
+      <AuthProvider>
+        <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
@@ -41,6 +43,7 @@ const Router = () => {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </AccessibilityProvider>
   );
 };
 

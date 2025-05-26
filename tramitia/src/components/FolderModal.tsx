@@ -32,17 +32,13 @@ const FolderModal = ({ isOpen, onClose, folder, onSaveFolder, existingFolders = 
   const documentsByTramite: Record<string, Document[]> = {
     'libreta-militar': [
       { id: 'doc1', name: 'Documento 1 - Cédula de ciudadanía', completed: false },
-      { id: 'doc2', name: 'Documento 2 - Certificado de estudios', completed: false },
+      { id: 'doc2', name: 'Documento 2 - Registro Civil de Nacimiento', completed: false },
       { id: 'doc3', name: 'Documento 3 - Fotografías 3x4', completed: false },
-      { id: 'doc4', name: 'Documento 4 - Formulario de inscripción', completed: false },
-      { id: 'doc5', name: 'Documento 5 - Comprobante de pago', completed: false }
+      { id: 'doc4', name: 'Documento 4 - Certificado de Estudios', completed: false },
+      { id: 'doc5', name: 'Documento 5 - Examenes medicos', completed: false }
     ],
     'runt': [
       { id: 'doc1', name: 'Documento 1 - Cédula de ciudadanía', completed: false },
-      { id: 'doc2', name: 'Documento 2 - Examen médico', completed: false },
-      { id: 'doc3', name: 'Documento 3 - Curso de conducción', completed: false },
-      { id: 'doc4', name: 'Documento 4 - Examen teórico-práctico', completed: false },
-      { id: 'doc5', name: 'Documento 5 - Comprobante de pago', completed: false }
     ]
   };
 

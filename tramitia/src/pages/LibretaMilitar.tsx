@@ -6,6 +6,8 @@ import HoverTooltip from '../components/HoverTooltip';
 import { useAuth } from '../contexts/AuthContext';
 import libretaMilitarImg from '../assets/imgTramites/Libreta Militar.jpg';
 import papeleoDoodle from '../assets/LibretaMilitar/papeleo_doodle.png';
+import hablarDoodle from '../assets/LibretaMilitar/paso2_libretamilitar.png';
+import recibirDoodle from '../assets/LibretaMilitar/paso3_libretamilitar.png';
 import filaDoodle from '../assets/LibretaMilitar/fila_doodle.png';
 import mapaImg from '../assets/LibretaMilitar/Mapa.png';
 
@@ -43,27 +45,27 @@ const LibretaMilitar = () => {
   const steps = [
     {
       id: 1,
-      title: "Recopilación de documentos",
+      title: "Reunir documentos básicos",
       image: papeleoDoodle,
-      description: "Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      description: "Antes de iniciar cualquier solicitud, es fundamental que tengas listos algunos documentos. Reúne tu cédula ampliada al 150 %, registro civil, certificado de estudios, tipo de sangre y las clásicas fotos fondo azul. Son los requisitos mínimos para continuar con el proceso"
     },
     {
       id: 2,
-      title: "Solicitud en línea",
-      image: filaDoodle,
-      description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit."
+      title: "Solicitud y clasificación",
+      image: hablarDoodle,
+      description: "Debes diligenciar el Formulario 15/16 que te entregan en la ventanilla del Distrito Militar. Después tendrás una entrevista donde revisan tu estado civil, estudios y salud. Si aplicas a exoneración o aplazamiento, este es el momento para declararlo."
     },
     {
       id: 3,
       title: "Pago de tasas",
-      image: papeleoDoodle,
-      description: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi."
+      image: filaDoodle,
+      description: "Con base en tu situación, el sistema calculará la Cuota de Compensación Militar. Si cumples condiciones como ingresos bajos (Ley 2341), podrías recibir un descuento completo. Luego, realiza el pago y conserva el recibo como comprobante."
     },
     {
       id: 4,
-      title: "Cita presencial",
-      image: filaDoodle,
-      description: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
+      title: "Registro biométrico y entrega",
+      image: recibirDoodle,
+      description: "Finalmente, te tomarán la foto y huellas para el sistema. Firmas una declaración y te entregan un número de proceso. En 10 a 30 días te citarán para recoger tu libreta o un certificado provisional, dependiendo del estado de impresión."
     }
   ];
 
@@ -95,18 +97,19 @@ const LibretaMilitar = () => {
                 Libreta Militar
               </h1>
               <p className="text-left text-lg sm:text-xl md:text-2xl font-inter font-semibold text-white mb-6 leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Donec volutpat, turpis id viverra pretium
+              La libreta militar es un documento obligatorio para los hombres colombianos mayores de 18 años y certifica su situación militar. 
               </p>
               
               {/* Difficulty Rating */}
               <div className="flex items-center gap-2 mb-8">
                 <span className="text-white font-poppins font-semibold text-lg">DIFICULTAD:</span>
                 <div className="flex gap-1">
-                  {[1, 2, 3, 4].map((star) => (
+                  {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className="w-6 h-6 text-yellow-400 fill-current"
+                      className={`w-6 h-6 ${
+                        star <= 4 ? 'text-yellow-400' : 'text-gray-400'
+                      } fill-current`}
                       viewBox="0 0 24 24"
                     >
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -145,45 +148,26 @@ const LibretaMilitar = () => {
               
               <div className="space-y-6 text-[#2C3E50] font-poppins text-lg leading-relaxed text-left max-w-3xl">
                 <p>
-                  Lorem ipsum <HoverTooltip 
-                    term="Dolor" 
-                    explanation="Término legal que se refiere al proceso administrativo de identificación militar obligatorio para ciudadanos colombianos."
+                La libreta militar es el documento oficial que certifica tu situación frente al servicio militar obligatorio en Colombia. 
+                Sin ella, podrías enfrentar restricciones importantes como no poder graduarte de muchas universidades, acceder a ciertos empleos públicos o incluso avanzar en procesos de contratación estatal.
+                Afortunadamente, la Ley 2341 de 2023 trajo un cambio importante: si tú o tu núcleo familiar tienen un ingreso igual o inferior a dos salarios mínimos mensuales legales vigentes 
+                (≤ 2 <HoverTooltip 
+                    term="SMMLV" 
+                    explanation="Salario mínimo mensual legal vigente, para 2025 ha sido establecido en $1.423.500"
                   >
-                    dolor
-                  </HoverTooltip> sit amet, consectetur 
-                  adipiscing elit. Donec volutpat, turpis id 
-                  viverra pretium, leo risus molestie erat, in 
-                  pharetra ex est at tellus. Sed vehicula 
-                  euismod nisl, ac tristique diam iaculis a. 
-                  Nulla sit amet nisl a
+                    SMMLV
+                  </HoverTooltip>), puedes aplicar a una exoneración total del pago de la Cuota de Compensación Militar.
                 </p>
                 
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur 
-                  adipiscing elit. Donec volutpat, turpis id 
-                  viverra pretium, leo risus <HoverTooltip 
-                    term="Molestie" 
-                    explanation="Proceso que requiere documentación específica y cumplimiento de requisitos establecidos por las autoridades militares."
-                  >
-                    molestie
-                  </HoverTooltip> erat, in 
-                  pharetra ex est at tellus. Sed vehicula 
-                  euismod nisl, ac tristique diam iaculis a. 
-                  Nulla sit amet nisl a
+                El proceso comienza en el portal oficial <a href='https://www.libretamilitar.mil.co/'>libretamilitar.mil.co </a>, donde debes registrarte, crear un usuario, y cargar documentos personales como tu cédula, certificado de estudios, y comprobante de ingresos.
+                En el formulario, asegúrate de marcar la opción "Aplicación Ley 2341" para que el sistema evalúe si cumples los requisitos. 
+                Es fundamental que los datos estén claros y actualizados, ya que luego deberás agendar una cita en el Distrito Militar más cercano para una entrevista y validación presencial.
                 </p>
                 
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur 
-                  adipiscing elit. Donec volutpat, turpis id 
-                  viverra pretium, leo risus molestie erat, in 
-                  pharetra ex est at tellus. Sed <HoverTooltip 
-                    term="Vehicula" 
-                    explanation="Trámite requerido para obtener la situación militar definida, esencial para acceder a empleos públicos y otros procesos."
-                  >
-                    vehicula
-                  </HoverTooltip> 
-                  euismod nisl, ac tristique diam iaculis a. 
-                  Nulla sit amet nisl a
+                Durante esta cita, un oficial revisará tu situación socioeconómica, estado civil, nivel educativo, y condiciones de salud. 
+                También deberás declarar si tienes alguna causal válida de aplazamiento o exoneración adicional
                 </p>
               </div>
             </div>
@@ -204,8 +188,8 @@ const LibretaMilitar = () => {
                     <div>
                       <h4 className="font-semibold mb-2">Ministerio de Defensa Nacional</h4>
                       <p className="text-sm opacity-90">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Donec volutpat, turpis id viverra
+                      Entidad responsable de reglamentar y supervisar el proceso de definición 
+                      de la situación militar en Colombia.
                       </p>
                     </div>
                   </div>
@@ -217,8 +201,8 @@ const LibretaMilitar = () => {
                     <div>
                       <h4 className="font-semibold mb-2">Ejército Nacional</h4>
                       <p className="text-sm opacity-90">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Donec volutpat, turpis id ver
+                      Encargado de gestionar el proceso de inscripción, 
+                      clasificación, citación y expedición de la libreta militar
                       </p>
                     </div>
                   </div>
@@ -230,8 +214,8 @@ const LibretaMilitar = () => {
                     <div>
                       <h4 className="font-semibold mb-2">Ministerio de Justicia y de Derecho</h4>
                       <p className="text-sm opacity-90">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Donec volutpat, turpis id ver
+                      Interviene en casos de objeción de conciencia y 
+                      apoyo legal en situaciones especiales relacionadas con el servicio militar.
                       </p>
                     </div>
                   </div>
@@ -241,21 +225,27 @@ const LibretaMilitar = () => {
               {/* General Requirements */}
               <div className="bg-gradient-to-b from-[#648DB6] to-[#2C3E50] text-white rounded-lg p-6">
                 <h3 className="text-xl font-poppins font-bold mb-6 text-left">
-                  Requisitos Generales
+                  Documentos Requeridos
                 </h3>
                 
                 <ul className="space-y-3 text-left">
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-white rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm">Lorem ipsum dolor sit amet,</span>
+                    <span className="text-sm">Cédula original y dos copias ampliadas al 150 %.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-white rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm">Lorem ipsum dolor sit amet,</span>
+                    <span className="text-sm">Registro civil de nacimiento</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-white rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm">Lorem ipsum dolor sit amet,</span>
+                    <span className="text-sm">Certificado de estudios o diploma</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-2 h-2 bg-white rounded-full flex-shrink-0 mt-2"></span>
+                    <span className="text-sm">Tipo de sangre (RH) en tarjeta o examen.
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -332,7 +322,7 @@ const LibretaMilitar = () => {
       {/* Lugares de Interés Section */}
       <section className="bg-white px-4 sm:px-8 md:px-16 lg:px-24 py-16">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-poppins font-bold text-[#2C3E50] mb-12 text-center">
+          <h2 className="text-4xl sm:text-5xl font-poppins font-bold text-[#2C3E50] mb-12 text-left">
             Lugares de Interés
           </h2>
           
@@ -346,7 +336,7 @@ const LibretaMilitar = () => {
                   className="w-full h-auto rounded-lg shadow-md"
                 />
                 <div className="text-center mt-4">
-                  <span className="text-[#32A5DD] font-poppins text-sm font-semibold">Mapa de ubicaciones</span>
+                  <span className="text-[#AED6F1] font-poppins text-sm font-semibold">Mapa de ubicaciones</span>
                 </div>
               </div>
             </div>
@@ -362,25 +352,19 @@ const LibretaMilitar = () => {
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
                     <span className="text-sm font-poppins text-[#2C3E50]">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                    Distrito Militar No. 14 – Calle 44 # 8-51, Ibagué
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
                     <span className="text-sm font-poppins text-[#2C3E50]">
-                      Donec volutpat, turpis id viverra pretium, leo risus
+                    Canton Militar Cr. Jaime Rooke # 10-10, Ibagué
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
                     <span className="text-sm font-poppins text-[#2C3E50]">
-                      Sed vehicula euismod nisl, ac tristique diam iaculis
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm font-poppins text-[#2C3E50]">
-                      Nulla sit amet nisl a mauris tincidunt
+                    Sexta Zona de Reclutamiento Cra. 9b #12-1, Ibagué, Tolima
                     </span>
                   </li>
                 </ul>

@@ -5,7 +5,7 @@ import ComingSoonModal from './ComingSoonModal';
 import libretaMilitarImg from '../assets/imgTramites/Libreta Militar.jpg';
 import pasaporteImg from '../assets/imgTramites/Pasaporte.jpeg';
 import licenciaImg from '../assets/imgTramites/Licencia.jpg';
-import runtImg from '../assets/imgTramites/Renta.jpeg';
+import runtImg from '../assets/imgTramites/runt.jpeg';
 import seguroMedicoImg from '../assets/imgTramites/Seguro Medico.jpg';
 import creditoImg from '../assets/imgTramites/Credito.jpeg';
 

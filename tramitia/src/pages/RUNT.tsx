@@ -4,9 +4,10 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import HoverTooltip from '../components/HoverTooltip';
 import { useAuth } from '../contexts/AuthContext';
+import ventanillaDoodle from '../assets/RUNT/paso1_runt.png';
+import biometricoDoodle from '../assets/RUNT/paso2_runt.png';
 import runtImg from '../assets/imgTramites/runt.jpeg';
-import papeleoDoodle from '../assets/LibretaMilitar/papeleo_doodle.png';
-import filaDoodle from '../assets/LibretaMilitar/fila_doodle.png';
+import pagoDoodle from '../assets/RUNT/paso3_runt.png';
 import mapaImg from '../assets/LibretaMilitar/Mapa.png';
 
 const RUNT = () => {
@@ -43,27 +44,21 @@ const RUNT = () => {
   const steps = [
     {
       id: 1,
-      title: "Registro de datos personales",
-      image: papeleoDoodle,
-      description: "Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      title: "Reúne tus documentos y acércate a un organismo de tránsito",
+      image: ventanillaDoodle,
+      description: "Lleva tu cédula original (o pasaporte/cédula de extranjería si eres extranjero) a la Secretaría de Tránsito municipal o punto autorizado más cercano. No necesitas cita previa: solo debes estar presente físicamente, ya que el registro incluye toma de foto y huella digital."
     },
     {
       id: 2,
-      title: "Verificación de documentos",
-      image: filaDoodle,
-      description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit."
+      title: "Registro en el sistema y toma de datos biométricos",
+      image: biometricoDoodle,
+      description: "En el punto de atención, el funcionario ingresará tus datos personales en el sistema del RUNT. Luego, te tomarán una foto y las huellas digitales. Este registro crea tu perfil único en la base de datos nacional."
     },
     {
       id: 3,
-      title: "Examen médico",
-      image: papeleoDoodle,
-      description: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi."
-    },
-    {
-      id: 4,
-      title: "Expedición del documento",
-      image: filaDoodle,
-      description: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
+      title: "Realiza el pago y finaliza el registro",
+      image: pagoDoodle,
+      description: "El costo del registro varía según la ciudad, pero ronda los $15.000 a $20.000 COP. Puedes pagar en caja o datáfono según el punto de atención. Una vez finalizado el proceso, quedarás oficialmente inscrito en el RUNT y podrás avanzar con otros trámites de tránsito."
     }
   ];
 
@@ -95,18 +90,19 @@ const RUNT = () => {
                 RUNT
               </h1>
               <p className="text-left text-lg sm:text-xl md:text-2xl font-inter font-semibold text-white mb-6 leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Donec volutpat, turpis id viverra pretium
+              El RUNT (Registro Único Nacional de Tránsito) es la base de datos oficial que centraliza toda la información relacionada con vehículos, licencias de conducción, accidentes de tránsito, y más
               </p>
               
               {/* Difficulty Rating */}
               <div className="flex items-center gap-2 mb-8">
                 <span className="text-white font-poppins font-semibold text-lg">DIFICULTAD:</span>
                 <div className="flex gap-1">
-                  {[1, 2, 3].map((star) => (
+                  {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className="w-6 h-6 text-yellow-400 fill-current"
+                      className={`w-6 h-6 ${
+                        star <= 3 ? 'text-yellow-400' : 'text-gray-400'
+                      } fill-current`}
                       viewBox="0 0 24 24"
                     >
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -145,45 +141,33 @@ const RUNT = () => {
               
               <div className="space-y-6 text-[#2C3E50] font-poppins text-lg leading-relaxed text-left max-w-4xl">
                 <p>
-                  Lorem ipsum <HoverTooltip 
-                    term="Dolor" 
-                    explanation="Término legal que se refiere al proceso administrativo de registro único nacional de tránsito."
-                  >
-                    dolor
-                  </HoverTooltip> sit amet, consectetur 
-                  adipiscing elit. Donec volutpat, turpis id 
-                  viverra pretium, leo risus molestie erat, in 
-                  pharetra ex est at tellus. Sed vehicula 
-                  euismod nisl, ac tristique diam iaculis a. 
-                  Nulla sit amet nisl a
+
+                El RUNT es la base de datos que valida tu información ante todos los organismos de tránsito; sin estar inscrito no puedes matricular vehículos, 
+                sacar licencia ni pagar multas en línea. Desde 2025 el registro ciudadano cuesta $19 400 COP y se hace en cualquier 
+                Ventanilla Única de Servicios (VUS) o Organismo de Tránsito. Debes llevar cédula original y pagar en caja; el analista toma tus biométricos y sube datos al sistema en menos de 10 minutos.
+                Para consultas posteriores, ingresas gratis a <a href='https://runt.gov.co/'>runt.gov.co</a> y verificas vehículos, licencias o multas. 
+
                 </p>
                 
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur 
-                  adipiscing elit. Donec volutpat, turpis id 
-                  viverra pretium, leo risus <HoverTooltip 
-                    term="Molestie" 
-                    explanation="Proceso que requiere documentación específica para el registro de conductores y vehículos."
+                Además de ser obligatorio para acceder a trámites básicos de tránsito, el RUNT funciona como puente entre distintas entidades del Estado. 
+                Por ejemplo, al tramitar tu licencia de conducción, los datos del RUNT se cruzan con los registros del Ministerio de Transporte, el <HoverTooltip 
+                    term="SIMIT" 
+                    explanation=" Sistema integrado de información sobre multas y sanciones por infracciones de tránsito."
                   >
-                    molestie
-                  </HoverTooltip> erat, in 
-                  pharetra ex est at tellus. Sed vehicula 
-                  euismod nisl, ac tristique diam iaculis a. 
-                  Nulla sit amet nisl a
-                </p>
-                
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur 
-                  adipiscing elit. Donec volutpat, turpis id 
-                  viverra pretium, leo risus molestie erat, in 
-                  pharetra ex est at tellus. Sed <HoverTooltip 
-                    term="Vehicula" 
-                    explanation="Trámite esencial para la movilidad y el transporte legal en Colombia."
+                    SIMIT
+                  </HoverTooltip> y la <HoverTooltip 
+                    term="DIAN" 
+                    explanation="Dirección de impuestos y aduanas nacionales."
                   >
-                    vehicula
-                  </HoverTooltip> 
-                  euismod nisl, ac tristique diam iaculis a. 
-                  Nulla sit amet nisl a
+                    DIAN
+                  </HoverTooltip> para validar identidad, comparendos, 
+                y estado de impuestos vehiculares. También facilita la trazabilidad de vehículos usados, pues te permite saber si un carro tiene embargo, mora en <HoverTooltip 
+                    term="SOAT" 
+                    explanation="Seguro obligatorio de accidentes de tránsito."
+                  >
+                    SOAT
+                  </HoverTooltip> o revisión técnico-mecánica vencida. Estar inscrito en el RUNT es estar formalmente dentro del sistema de movilidad del país: sin este registro, simplemente no existes en el mundo del tránsito colombiano.
                 </p>
               </div>
             </div>
@@ -204,8 +188,8 @@ const RUNT = () => {
                     <div>
                       <h4 className="font-semibold mb-2">Ministerio de Transporte</h4>
                       <p className="text-sm opacity-90">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Donec volutpat, turpis id viverra
+                      Entidad encargada de reglamentar y supervisar el funcionamiento del RUNT a nivel nacional.
+                      Define las políticas públicas de movilidad y tránsito terrestre.
                       </p>
                     </div>
                   </div>
@@ -217,8 +201,8 @@ const RUNT = () => {
                     <div>
                       <h4 className="font-semibold mb-2">Agencia Nacional de Seguridad Vial</h4>
                       <p className="text-sm opacity-90">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Donec volutpat, turpis id ver
+                      Vigila que los datos del RUNT contribuyan a mejorar la seguridad vial en Colombia. 
+                      Usa la información para planificar campañas y acciones de prevención.
                       </p>
                     </div>
                   </div>
@@ -230,8 +214,8 @@ const RUNT = () => {
                     <div>
                       <h4 className="font-semibold mb-2">Secretarías de Tránsito Municipales</h4>
                       <p className="text-sm opacity-90">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Donec volutpat, turpis id ver
+                      Son las encargadas de inscribir a los ciudadanos en el RUNT de forma presencial. 
+                      También usan el sistema para validar y registrar trámites locales como licencias, matrículas y comparendos.
                       </p>
                     </div>
                   </div>
@@ -241,21 +225,13 @@ const RUNT = () => {
               {/* General Requirements */}
               <div className="bg-gradient-to-b from-[#648DB6] to-[#2C3E50] text-white rounded-lg p-6">
                 <h3 className="text-xl font-poppins font-bold mb-6 text-left">
-                  Requisitos Generales
+                  Documentos Requeridos
                 </h3>
                 
                 <ul className="text-left space-y-3">
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-white rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm">Lorem ipsum dolor sit amet,</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-2 h-2 bg-white rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm">Lorem ipsum dolor sit amet,</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-2 h-2 bg-white rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm">Lorem ipsum dolor sit amet,</span>
+                    <span className="text-sm">Cedula de ciudadania</span>
                   </li>
                 </ul>
               </div>
@@ -364,25 +340,13 @@ const RUNT = () => {
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
                     <span className="text-sm font-poppins text-[#2C3E50]">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                    Dirección Territorial Tolima, Ministerio de Transporte, Cra. 5 #61, Ibagué, Tolima
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
                     <span className="text-sm font-poppins text-[#2C3E50]">
-                      Donec volutpat, turpis id viverra pretium, leo risus
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm font-poppins text-[#2C3E50]">
-                      Sed vehicula euismod nisl, ac tristique diam iaculis
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-2 h-2 bg-[#32A5DD] rounded-full flex-shrink-0 mt-2"></span>
-                    <span className="text-sm font-poppins text-[#2C3E50]">
-                      Nulla sit amet nisl a mauris tincidunt
+                    Secretaría De Tránsito, Transporte Y De La Movilidad, Cra. 23 Sur #87, Ibagué, Tolima
                     </span>
                   </li>
                 </ul>

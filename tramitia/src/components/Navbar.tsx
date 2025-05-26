@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import avionLogo from '../assets/branding/avionLogo.png';
 import { useAuth } from '../contexts/AuthContext';
+import AccessibilityMenu from './AccessibilityMenu';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -44,23 +45,28 @@ const Navbar = () => {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div
-        className="flex items-center gap-2 cursor-pointer select-none"
-        onClick={goToHome}
-        tabIndex={0}
-        aria-label="Ir al inicio"
-      >
-        <img
-          src={avionLogo}
-          alt="Logo de Tramitia, un avión de papel azul"
-          className="h-12 w-12 transition-transform hover:scale-105"
-        />
-        {/* Badge Premium */}
-        {currentUser && isPremium && (
-          <span className="bg-gradient-to-r from-[#AED6F1] to-[#DFFFD8] text-[#2C3E50] text-xs font-bold px-2 py-1 rounded-full ml-2">
-            PREMIUM
-          </span>
-        )}
+      <div className="flex items-center gap-3">
+        <div
+          className="flex items-center gap-2 cursor-pointer select-none"
+          onClick={goToHome}
+          tabIndex={0}
+          aria-label="Ir al inicio"
+        >
+          <img
+            src={avionLogo}
+            alt="Logo de Tramitia, un avión de papel azul"
+            className="h-12 w-12 transition-transform hover:scale-105"
+          />
+          {/* Badge Premium */}
+          {currentUser && isPremium && (
+            <span className="bg-gradient-to-r from-[#AED6F1] to-[#DFFFD8] text-[#2C3E50] text-xs font-bold px-2 py-1 rounded-full ml-2">
+              PREMIUM
+            </span>
+          )}
+        </div>
+        
+        {/* Menú de accesibilidad */}
+        <AccessibilityMenu />
       </div>
       
       {/* Menú central - siempre centrado */}
@@ -69,7 +75,7 @@ const Navbar = () => {
           <>
             <li>
               <span
-                onClick={() => scrollToSection('pricing')}
+                onClick={() => scrollToSection('consultados')}
                 className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
               >
                 Servicio
@@ -85,10 +91,10 @@ const Navbar = () => {
             </li>
             <li>
               <span
-                onClick={() => scrollToSection('consultados')}
+                onClick={() => scrollToSection('pricing')}
                 className="text-[#2C3E50] hover:text-[#32A5DD] transition-colors cursor-pointer"
               >
-                Consultados
+                Planes
               </span>
             </li>
           </>
@@ -223,6 +229,13 @@ const Navbar = () => {
               </li>
             </>
           )}
+          
+          {/* Menú de accesibilidad en móvil */}
+          <li className="border-t pt-2 mt-2">
+            <div className="flex justify-center">
+              <AccessibilityMenu />
+            </div>
+          </li>
           
           {/* Opciones de usuario en móvil */}
           {currentUser && (

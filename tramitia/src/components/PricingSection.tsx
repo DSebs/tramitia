@@ -5,7 +5,7 @@ const plans = [
   {
     title: 'Plan Gratuito',
     price: '$0 - Cero pollito',
-    currency: 'COP',
+    currency: '',
     period: 'mensual',
     benefits: [
       { text: 'Acceso a la informacion de todos los tramites', included: true },

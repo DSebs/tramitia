@@ -73,3 +73,62 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Estilos de accesibilidad para espaciado de líneas */
+.line-spacing-normal {
+  --line-height-text: 1.5;
+}
+
+.line-spacing-increased {
+  --line-height-text: 1.8;
+}
+
+.line-spacing-large {
+  --line-height-text: 2.2;
+}
+
+/* Aplicar el espaciado a elementos de texto específicos */
+.line-spacing-normal p,
+.line-spacing-normal li,
+.line-spacing-normal span:not(.bg-gradient-to-r):not(.text-xs):not(.font-bold),
+.line-spacing-normal div:not(.flex):not(.grid),
+.line-spacing-normal h1,
+.line-spacing-normal h2,
+.line-spacing-normal h3,
+.line-spacing-normal h4,
+.line-spacing-normal h5,
+.line-spacing-normal h6,
+.line-spacing-normal label,
+.line-spacing-normal .text-content {
+  line-height: var(--line-height-text, 1.5) !important;
+}
+
+.line-spacing-increased p,
+.line-spacing-increased li,
+.line-spacing-increased span:not(.bg-gradient-to-r):not(.text-xs):not(.font-bold),
+.line-spacing-increased div:not(.flex):not(.grid),
+.line-spacing-increased h1,
+.line-spacing-increased h2,
+.line-spacing-increased h3,
+.line-spacing-increased h4,
+.line-spacing-increased h5,
+.line-spacing-increased h6,
+.line-spacing-increased label,
+.line-spacing-increased .text-content {
+  line-height: var(--line-height-text, 1.8) !important;
+}
+
+.line-spacing-large p,
+.line-spacing-large li,
+.line-spacing-large span:not(.bg-gradient-to-r):not(.text-xs):not(.font-bold),
+.line-spacing-large div:not(.flex):not(.grid),
+.line-spacing-large h1,
+.line-spacing-large h2,
+.line-spacing-large h3,
+.line-spacing-large h4,
+.line-spacing-large h5,
+.line-spacing-large h6,
+.line-spacing-large label,
+.line-spacing-large .text-content {
+  line-height: var(--line-height-text, 2.2) !important;
+}
